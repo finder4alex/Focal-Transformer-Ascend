@@ -1,0 +1,67 @@
+# Architecture
+arch: focalv2_small_useconv_patch4_window7_224
+
+# ===== Dataset ===== #
+data_url: ./data/imagenet
+set: ImageNet
+num_classes: 1000
+mix_up: 0.8
+cutmix: 1.0
+auto_augment: rand-m9-mstd0.5-inc1
+interpolation: bicubic
+re_prob: 0.25
+re_mode: pixel
+re_count: 1
+mixup_prob: 1.
+switch_prob: 0.5
+mixup_mode: batch
+crop_ratio: 0.875
+
+
+# ===== Learning Rate Policy ======== #
+optimizer: adamw
+lr_scheduler: cosine_lr
+base_lr: 0.0005
+min_lr: 0.000005
+warmup_length: 20
+warmup_lr: 0.00001
+cool_length: 20
+cool_lr: 0.000005
+
+
+# ===== Network training config ===== #
+amp_level: O1
+keep_bn_fp32: True
+beta: [ 0.9, 0.999 ]
+is_dynamic_loss_scale: True
+use_global_norm: True
+clip_global_norm_value: 5.
+enable_ema: True
+ema_decay: 0.99992
+loss_scale: 1024
+weight_decay: 0.05
+momentum: 0.9
+label_smoothing: 0.1
+epochs: 320
+batch_size: 64
+
+
+# ===== Hardware setup ===== #
+num_parallel_workers: 16
+device_target: Ascend
+
+# ===== Model config ===== #
+image_size: 224
+patch_size: 4
+drop_path_rate: 0.3
+embed_dim: 96
+depths: [ 2, 2, 18, 2 ]
+num_heads: [ 3, 6, 12, 24 ]
+window_size: 7
+focal_stages: [ 0, 1, 2, 3 ]
+focal_levels: [ 2, 2, 2, 2 ]
+focal_windows: [ 7, 5, 3, 1 ]
+expand_sizes: [ 3, 3, 3, 3 ]
+focal_topK: 128
+focal_pool: "fc"
+use_conv_embed: True
